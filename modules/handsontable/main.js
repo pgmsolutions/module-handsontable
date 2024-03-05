@@ -63,9 +63,11 @@ window.HandsontableInstance = class {
 
         /** Timer to not send too much changes to RPGM */
         this._debouncer = null;
+        this._debouncerData = null;
 
         /** JS binding */
-        this.sendChange = this.sendChange.bind(this);
+        this.sendValue = this.sendValue.bind(this);
+        this.sendSelection = this.sendSelection.bind(this);
         this.onInitialized = this.onInitialized.bind(this);
         this.onValueChange = this.onValueChange.bind(this);
         this.onSelectionChange = this.onSelectionChange.bind(this);
@@ -84,8 +86,8 @@ window.HandsontableInstance = class {
         this._table.addHook('afterCreateCol', this.onValueChange);
         this._table.addHook('afterChange', this.onValueChange);
         
+        this._table.addHook('afterSelection', this.onSelectionChange);
         this._table.addHook('afterDeselect', this.onSelectionChange);
-        this._table.addHook('afterDrawSelection', this.onSelectionChange);
     }
 
     getId(){
@@ -93,35 +95,38 @@ window.HandsontableInstance = class {
     }
 
     onInitialized(){
-
+        RPGM.sendMessage('r', 'handsontable/onDidLoad', {
+            id: this._id,
+        });
     }
 
-    /**
-     * This function is called when the user changes the zoom or drag the map.
-     * It debounces the call to R by setting a timer.
-     */
     onValueChange(){
+        if(this._debouncer2 !== null){
+            clearTimeout(this._debouncer2);
+        }
+        this._debouncer2 = setTimeout(this.sendValue, 200); // 200ms
+    }
+    sendValue(){
+        RPGM.sendMessage('r', 'handsontable/onDidChangeValue', {
+            id: this._id,
+            cols: this._table.getColHeader(),
+            rows: this._table.getRowHeader(),
+            value: this._table.getData()
+        });
+    }
+
+    onSelectionChange(row = null, column = null, row2 = null, column2 = null){
         if(this._debouncer !== null){
             clearTimeout(this._debouncer);
         }
-        this._debouncer = setTimeout(this.sendChange, 200); // 200ms
+        this._debouncer = setTimeout(this.sendSelection, 200); // 200ms
     }
-
-    onSelectionChange(){
-
-    }
-
-    /**
-     * Actually send the map state to R.
-     */
-    sendChange(){
-        RPGM.sendMessage('r', 'leaflet/onDidChangeView', {
+    sendSelection(){
+        console.log('sending')
+        console.log(this._table.getSelected())
+        RPGM.sendMessage('r', 'handsontable/onDidChangeSelection', {
             id: this._id,
-            northLat: this._map.getBounds().getNorth(),
-            eastLng: this._map.getBounds().getEast(),
-            southLat: this._map.getBounds().getSouth(),
-            westLng: this._map.getBounds().getWest(),
-            zoomLevel: this._map.getZoom()
+            selection: this._table.getSelected()
         });
     }
 }

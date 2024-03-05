@@ -6,17 +6,34 @@ Handsontable.create(
     rpgm.step('main', 'handsontable'),
     'table',
     height = 512,
-    data = list(
-        data=list(
-            list('', 'Tesla', 'Volvo', 'Toyota', 'Ford'),
-            list('2019', 10, 11, 12, 13),
-            list('2020', 20, 11, 14, 13),
-            list('2021', 30, 15, 12, 1)
-        ),
+    options = list(
+        data=mtcars,
         rowHeaders=TRUE,
         colHeaders=TRUE,
+
         autoWrapRow=TRUE,
         autoWrapCol=TRUE,
+
+        filters=TRUE,
+        dropdownMenu=TRUE,
+
         licenseKey='non-commercial-and-evaluation'
     )
-)
+);
+
+Handsontable.on('main', 'onDidLoad', function(){
+});
+
+Handsontable.on('main', 'onDidChangeValue', function(value, columns, rows){
+    cat(value)
+    gui.setValue("this", "data", "changed!")
+});
+
+Handsontable.on('main', 'onDidChangeSelection', function(selection){
+    if(is.null(selection)){
+        gui.setValue("this", "selection", "Selection: nothing is selected!")
+    }
+    else {
+        gui.setValue("this", "selection", paste0("Selection: from (",selection[[1L]],",",selection[[2L]],") to (",selection[[3L]],",",selection[[4L]],")!"))
+    }
+});

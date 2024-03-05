@@ -35,10 +35,27 @@
 			}
 		},
 		{
-			"id": "",
+			"id": "selection",
 			"type": "label",
 			"data": {
-				"value": "...",
+				"value": "Selection: none",
+				"isr": false,
+				"css": "",
+				"margintop": "10",
+				"labeltext": "",
+				"labelposition": "hidden",
+				"helptext": "",
+				"helpposition": "bottom",
+				"fontsize": "14",
+				"fontfamily": "default",
+				"fontcolor": "#000000"
+			}
+		},
+		{
+			"id": "data",
+			"type": "label",
+			"data": {
+				"value": "Data: none",
 				"isr": false,
 				"css": "",
 				"margintop": "10",
