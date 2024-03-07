@@ -7,7 +7,7 @@
 	"logo": "",
 	"css": "",
 	"list": "hide",
-	"rconsole": "none",
+	"rconsole": "r",
 	"outputfolder": "{{name}}_{{datetime}}",
 	"history": [],
 	"created": "2024-03-04T10:39:26+01:00",

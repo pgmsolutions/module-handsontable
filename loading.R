@@ -1,15 +1,22 @@
 source(rpgm.pgmFilePath('modules/handsontable/main.R'))
 
-# Initialize the table widget
+exampleDF <- mtcars
+
+# Initialize the table widget with a data frame
 Handsontable.create(
     'main',
     rpgm.step('main', 'handsontable'),
     'table',
     height = 512,
+    # Options are the Handsontable options, see https://handsontable.com/docs/javascript-data-grid/api/options/
     options = list(
-        data=mtcars,
+        data=exampleDF,
         rowHeaders=TRUE,
         colHeaders=TRUE,
+
+        autoColumnSize=TRUE,
+        columnSorting=TRUE,
+        manualColumnResize=TRUE,
 
         autoWrapRow=TRUE,
         autoWrapCol=TRUE,
@@ -21,14 +28,17 @@ Handsontable.create(
     )
 );
 
+# The table is loaded
 Handsontable.on('main', 'onDidLoad', function(){
 });
 
+# User changed the value of the table
 Handsontable.on('main', 'onDidChangeValue', function(value, columns, rows){
-    cat(value)
-    gui.setValue("this", "data", "changed!")
+    exampleDF <<- value
+    gui.setValue("this", "data", paste0("Sum of first column: ", sum(exampleDF$mpg)))
 });
 
+# Selection changed!
 Handsontable.on('main', 'onDidChangeSelection', function(selection){
     if(is.null(selection)){
         gui.setValue("this", "selection", "Selection: nothing is selected!")

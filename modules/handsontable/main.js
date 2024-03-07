@@ -75,8 +75,6 @@ window.HandsontableInstance = class {
         // Create table
         const element = document.getElementById(`handsontable-${options.id}`);
         element.style.height = `${options.height}px`;
-        console.log(element);
-        console.log(options.data);
         this._table = new Handsontable(element, options.data);
 
         // Detect zoom change and drag
@@ -107,11 +105,26 @@ window.HandsontableInstance = class {
         this._debouncer2 = setTimeout(this.sendValue, 200); // 200ms
     }
     sendValue(){
+        // Transform the array of array to an R data-frame ready object by transposing
+        const content = this._table.getData();
+        const contentObject = {};
+        if(content.length > 0){
+            const nrows = content.length;
+            for (let c = 0; c < content[0].length; c++) {
+                contentObject[`c${c}`] = Array(nrows);
+            }
+            for(let r = 0; r < content.length; r++) {
+                for (let c = 0; c < content[r].length; c++) {
+                    contentObject[`c${c}`][r] = content[r][c];
+                }
+            }
+        }
+
         RPGM.sendMessage('r', 'handsontable/onDidChangeValue', {
             id: this._id,
             cols: this._table.getColHeader(),
             rows: this._table.getRowHeader(),
-            value: this._table.getData()
+            value: contentObject
         });
     }
 

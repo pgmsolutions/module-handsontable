@@ -16,6 +16,9 @@ Handsontable.create <- function(tableId, step, widgetId, height = 512, options =
         if("colHeaders" %in% optionsNames && options$colHeaders == TRUE){
             options$colHeaders = colnames(options$data);
         }
+        if(!("columns" %in% optionsNames)){
+            options$columns = Handsontable.getColumnsFromDF(options$data);
+        }
         options$data = Handsontable.fromDF(options$data);
     }
 
@@ -58,7 +61,10 @@ rpgm.on('didReceiveMessage', function(message, data){
         .handsontable$emit(data$id, 'onDidLoad', list())
     }
     else if(message == 'handsontable/onDidChangeValue'){
-        .handsontable$emit(data$id, 'onDidChangeValue', list(value=data$value, columns=data$cols, rows=data$rows))
+        df <- as.data.frame(do.call(cbind, data$value))
+        colnames(df) <- data$cols
+        row.names(df) <- data$rows
+        .handsontable$emit(data$id, 'onDidChangeValue', list(value=df, columns=data$cols, rows=data$rows))
     }
     else if(message == 'handsontable/onDidChangeSelection'){
         .handsontable$emit(data$id, 'onDidChangeSelection', list(selection=data$selection))
