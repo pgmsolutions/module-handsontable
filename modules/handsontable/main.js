@@ -43,6 +43,12 @@ window.HandsontableManager = new class {
                 tableInstance.update(data.data);
             }
         });
+
+        // Destroy all instances when leaving current step
+        RPGM.on('willLeaveStep', (stepId)=>{
+            this._tables.forEach(t => t.destroy());
+            this._tables = [];
+        });
     }
 
     /**
@@ -86,6 +92,9 @@ window.HandsontableInstance = class {
         
         this._table.addHook('afterSelection', this.onSelectionChange);
         this._table.addHook('afterDeselect', this.onSelectionChange);
+
+        // State
+        this._active = true;
     }
 
     getId(){
@@ -105,6 +114,10 @@ window.HandsontableInstance = class {
         this._debouncer2 = setTimeout(this.sendValue, 200); // 200ms
     }
     sendValue(){
+        if(!this._active){
+            return;
+        }
+
         // Transform the array of array to an R data-frame ready object by transposing
         const content = this._table.getData();
         const contentObject = {};
@@ -119,7 +132,6 @@ window.HandsontableInstance = class {
                 }
             }
         }
-
         RPGM.sendMessage('r', 'handsontable/onDidChangeValue', {
             id: this._id,
             cols: this._table.getColHeader(),
@@ -135,11 +147,21 @@ window.HandsontableInstance = class {
         this._debouncer = setTimeout(this.sendSelection, 200); // 200ms
     }
     sendSelection(){
-        console.log('sending')
-        console.log(this._table.getSelected())
+        if(!this._active){
+            return;
+        }
+
         RPGM.sendMessage('r', 'handsontable/onDidChangeSelection', {
             id: this._id,
             selection: this._table.getSelected()
         });
+    }
+
+    destroy(){
+        if(!this._active){
+            return;
+        }
+        this._active = false;
+        this._table.destroy();
     }
 }
