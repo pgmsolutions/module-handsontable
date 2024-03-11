@@ -1,6 +1,17 @@
 source(rpgm.pgmFilePath('modules/handsontable/main.R'))
 
+# Create a sample data frame with number, checkboxes and strings
 exampleDF <- mtcars
+# Transform the vs column with 0 and 1 to TRUE or FALSE
+temp <- c()
+for(i in 1:nrow(mtcars)){
+    temp <- c(temp, exampleDF$vs[[i]] == 1)
+}
+exampleDF$vs <- temp;
+# Put the rows names to a first column
+exampleDF$Name <- row.names(exampleDF)
+exampleDF <- exampleDF[, c('Name', 'mpg', 'cyl', 'disp', 'hp', 'drat', 'wt', 'qsec', 'vs', 'am', 'gear', 'carb')]
+row.names(exampleDF) <- NULL
 
 # Initialize the table widget with a data frame
 Handsontable.create(
@@ -18,13 +29,18 @@ Handsontable.create(
         columnSorting=TRUE,
         manualColumnResize=TRUE,
 
+        rowHeaderWidth=50,
+        colWidths=c(100, 100, 150, 100, 100, 100, 100, 50, 50, 50, 50),
+        width='100%',
+        stretchH='all', # define the algorithm to use when the container is larger than the grid
+
         autoWrapRow=TRUE,
         autoWrapCol=TRUE,
 
         filters=TRUE,
         dropdownMenu=TRUE,
 
-        licenseKey='non-commercial-and-evaluation'
+        licenseKey='non-commercial-and-evaluation' # You should enter your commercial license key here.
     )
 );
 
