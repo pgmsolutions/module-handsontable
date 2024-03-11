@@ -61,7 +61,7 @@ rpgm.on('didReceiveMessage', function(message, data){
         .handsontable$emit(data$id, 'onDidLoad', list())
     }
     else if(message == 'handsontable/onDidChangeValue'){
-        df <- as.data.frame(do.call(cbind, data$value))
+        df <- data.frame(data$value)
         colnames(df) <- data$cols
         row.names(df) <- data$rows
         .handsontable$emit(data$id, 'onDidChangeValue', list(value=df, columns=data$cols, rows=data$rows))
