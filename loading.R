@@ -1,17 +1,24 @@
 source(rpgm.pgmFilePath('modules/handsontable/main.R'))
 
-# Create a sample data frame with number, checkboxes and strings
-exampleDF <- mtcars
-# Transform the vs column with 0 and 1 to TRUE or FALSE
-temp <- c()
-for(i in 1:nrow(mtcars)){
-    temp <- c(temp, exampleDF$vs[[i]] == 1)
+# Create an example data frame for the app with number, checkboxes and strings
+createExampleDF <- function(){
+    exampleDF <- mtcars
+
+    # Transform the vs column with 0 and 1 to TRUE or FALSE
+    temp <- c()
+    for(i in 1:nrow(mtcars)){
+        temp <- c(temp, exampleDF$vs[[i]] == 1)
+    }
+    exampleDF$vs <- temp;
+
+    # Put the rows names to a first column
+    exampleDF$Name <- row.names(exampleDF)
+    exampleDF <- exampleDF[, c('Name', 'mpg', 'cyl', 'disp', 'hp', 'drat', 'wt', 'qsec', 'vs', 'am', 'gear', 'carb')]
+    row.names(exampleDF) <- NULL
+
+    return(exampleDF)
 }
-exampleDF$vs <- temp;
-# Put the rows names to a first column
-exampleDF$Name <- row.names(exampleDF)
-exampleDF <- exampleDF[, c('Name', 'mpg', 'cyl', 'disp', 'hp', 'drat', 'wt', 'qsec', 'vs', 'am', 'gear', 'carb')]
-row.names(exampleDF) <- NULL
+exampleDF <- createExampleDF();
 
 # Initialize the table widget with a data frame
 Handsontable.create(
@@ -50,7 +57,7 @@ Handsontable.on('main', 'onDidLoad', function(){
 
 # User changed the value of the table
 Handsontable.on('main', 'onDidChangeValue', function(value, columns, rows){
-    exampleDF <<- value
+    exampleDF <<- value # value is the data.frame from Handsontable
     gui.setValue("this", "data", paste0("Sum of first column: ", sum(exampleDF$mpg)))
 });
 
