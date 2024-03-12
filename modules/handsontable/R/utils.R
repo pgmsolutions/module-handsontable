@@ -29,3 +29,12 @@ Handonstable.rTypeToTableType <- function(var){
     }
     return("text");
 }
+
+Handsontable.injectRowNames <- function(df, columnName){
+    rows <- row.names(df)
+    cols <- colnames(df)
+    df[columnName] <- rows
+    df <- df[, c(columnName, cols)]
+    row.names(df) <- NULL
+    return(df)
+}

@@ -12,10 +12,7 @@ createExampleDF <- function(){
     exampleDF$vs <- temp;
 
     # Put the rows names to a first column
-    exampleDF$Name <- row.names(exampleDF)
-    exampleDF <- exampleDF[, c('Name', 'mpg', 'cyl', 'disp', 'hp', 'drat', 'wt', 'qsec', 'vs', 'am', 'gear', 'carb')]
-    row.names(exampleDF) <- NULL
-
+    exampleDF <- Handsontable.injectRowNames(exampleDF, 'Name')
     return(exampleDF)
 }
 exampleDF <- createExampleDF();
