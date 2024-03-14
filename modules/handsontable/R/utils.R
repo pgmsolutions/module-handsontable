@@ -14,13 +14,13 @@ Handsontable.getColumnsFromDF <- function(df){
     cols <- list()
     for(i in 1:ncol(df)){
         cols[[i]] <- list(
-            type=Handonstable.rTypeToTableType(df[[i]])
+            type=Handsontable.rTypeToTableType(df[[i]])
         )
     }
     return(cols);
 }
 
-Handonstable.rTypeToTableType <- function(var){
+Handsontable.rTypeToTableType <- function(var){
     if(typeof(var) == "logical"){
         return("checkbox");
     }
