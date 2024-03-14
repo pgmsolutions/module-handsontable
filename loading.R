@@ -1,5 +1,12 @@
 source(rpgm.pgmFilePath('modules/handsontable/main.R'))
 
+#######################################################################################################
+#  ___                     _       _ 
+# | __|_ ____ _ _ __  _ __| |___  / |
+# | _|\ \ / _` | '  \| '_ \ / -_) | |
+# |___/_\_\__,_|_|_|_| .__/_\___| |_|
+#                    |_|             
+#######################################################################################################
 # Create an example data frame for the app with number, checkboxes and strings
 createExampleDF <- function(){
     exampleDF <- mtcars
@@ -67,3 +74,69 @@ Handsontable.on('main', 'onDidChangeSelection', function(selection){
         gui.setValue("this", "selection", paste0("Selection: from (",selection[[1L]],",",selection[[2L]],") to (",selection[[3L]],",",selection[[4L]],")!"))
     }
 });
+
+reset <- function(){
+    exampleDF <<- createExampleDF()
+    Handsontable.update('main', list(data=exampleDF))
+}
+
+#######################################################################################################
+#   ___                     _       ___ 
+#  | __|_ ____ _ _ __  _ __| |___  |_  )
+#  | _|\ \ / _` | '  \| '_ \ / -_)  / / 
+#  |___/_\_\__,_|_|_|_| .__/_\___| /___|
+#                     |_|               
+#######################################################################################################
+# The second handsontable with dropdown selection
+
+# Create colors list and generate colors for cars
+carColors <- c('Green', 'Yellow', 'Red', 'Blue', 'White', 'Black', 'Magenta', 'Cyan', 'Purple', 'Pink')
+getRandomColor <- function(){
+    return(carColors[[round(runif(1, 1, length(carColors)))]])
+}
+dropdownExample <- mtcars
+clrs <- c()
+for(i in seq(1:32)){
+    clrs <- c(clrs, getRandomColor())
+}
+dropdownExample$Color <- clrs
+
+# Name column
+dropdownExample <- Handsontable.injectRowNames(dropdownExample, 'Name')
+
+# Generate the column property to add the dropdown options to the colors column
+columns <- Handsontable.getColumnsFromDF(dropdownExample)
+colorsColumnIndex <- grep("Color", colnames(dropdownExample))
+columns[[colorsColumnIndex]] <- list(
+    type='dropdown',
+    source=carColors
+)
+
+# Create the table
+Handsontable.create(
+    'example2',
+    rpgm.step('main', 'handsontable'),
+    'example2',
+    height = 512,
+    options = list(
+        data=dropdownExample,
+        columns=columns, # override default columns types
+        rowHeaders=TRUE,
+        colHeaders=TRUE,
+
+        autoColumnSize=TRUE,
+        columnSorting=TRUE,
+        manualColumnResize=TRUE,
+
+        width='100%',
+        stretchH='all',
+
+        autoWrapRow=TRUE,
+        autoWrapCol=TRUE,
+
+        filters=TRUE,
+        dropdownMenu=TRUE,
+
+        licenseKey='non-commercial-and-evaluation' # You should enter your commercial license key here.
+    )
+);

@@ -17,7 +17,7 @@
 			"type": "rscript",
 			"x": 105,
 			"y": 140,
-			"target": 5
+			"target": 3
 		},
 		{
 			"uuid": 3,
@@ -45,9 +45,8 @@
 			"id": "wait",
 			"name": "wait",
 			"type": "gui",
-			"x": 525,
-			"y": 150,
-			"target": 3
+			"x": 380,
+			"y": 140
 		}
 	]
 }
