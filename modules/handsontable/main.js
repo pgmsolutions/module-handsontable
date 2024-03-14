@@ -157,6 +157,13 @@ window.HandsontableInstance = class {
         });
     }
 
+    update(settings){
+        if(!this._active){
+            return;
+        }
+        this._table.updateSettings(settings);
+    }
+
     destroy(){
         if(!this._active){
             return;

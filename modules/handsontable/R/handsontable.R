@@ -44,6 +44,26 @@ Handsontable.create <- function(tableId, step, widgetId, height = 512, options =
     rpgm.sendToJavascript('handsontable/enterStep')
 }
 
+Handsontable.update <- function(tableId, options){
+    # options names
+    optionsNames = names(options);
+
+    # Automatic dataframe -> list of lists
+    if(is.data.frame(options$data)){
+        if("rowHeaders" %in% optionsNames && options$rowHeaders == TRUE){
+            options$rowHeaders = row.names(options$data);
+        }
+        if("colHeaders" %in% optionsNames && options$colHeaders == TRUE){
+            options$colHeaders = colnames(options$data);
+        }
+        if(!("columns" %in% optionsNames)){
+            options$columns = Handsontable.getColumnsFromDF(options$data);
+        }
+        options$data = Handsontable.fromDF(options$data);
+    }
+    rpgm.sendToJavascript('handsontable/update', list(tableId=tableId, data=options))
+}
+
 rpgm.on('didReceiveMessage', function(message, data){
     if(message == 'handsontable/onDidEnterStep'){
         # Check if a table exists in this step and load it
