@@ -4,6 +4,10 @@ R RPGM module for controlling a Handsontable grid in a GUI.
 
 Current Handsontable version: 14.1.0.
 
+!!! warning
+    Please note that for commercial use you need to have a license from Handonstable. More information on [the official Handonstable website](https://handsontable.com/pricing).
+    The license key should then be used in the `licenseKey` option of `Handonstable.create` function.
+
 ## Table of Contents
 
 1. [Installation](#installation)
