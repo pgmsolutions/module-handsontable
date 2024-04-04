@@ -132,10 +132,16 @@ window.HandsontableInstance = class {
                 }
             }
         }
+        
+        // Row headers
+        const colsHeaders = this._table.getColHeader();
+        const rowsHeaders = this._table.getRowHeader();
+
+        // Send message
         RPGM.sendMessage('r', 'handsontable/onDidChangeValue', {
             id: this._id,
-            cols: this._table.getColHeader(),
-            rows: this._table.getRowHeader(),
+            cols: colsHeaders.every(h => h === false) ? [] : colsHeaders,
+            rows: rowsHeaders.every(h => h === false) ? [] : rowsHeaders,
             value: contentObject
         });
     }
