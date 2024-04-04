@@ -1,0 +1,3 @@
+.pgm-gui .choices__list--dropdown, .pgm-gui .choices__list[aria-expanded] {
+  z-index: 250;
+}
