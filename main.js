@@ -67,6 +67,9 @@ window.HandsontableInstance = class {
     constructor(options){
         this._id = options.id;
 
+        /** Prevent recursive updates */
+        this._skipNextChange = false;
+
         /** Timer to not send too much changes to RPGM */
         this._debouncer = null;
         this._debouncerData = null;
@@ -108,6 +111,10 @@ window.HandsontableInstance = class {
     }
 
     onValueChange(){
+        if(this._skipNextChange){
+            this._skipNextChange = false;
+            return;
+        }
         if(this._debouncer2 !== null){
             clearTimeout(this._debouncer2);
         }
@@ -167,6 +174,7 @@ window.HandsontableInstance = class {
         if(!this._active){
             return;
         }
+        this._skipNextChange = true;
         this._table.updateSettings(settings);
     }
 
