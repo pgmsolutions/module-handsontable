@@ -135,7 +135,11 @@ window.HandsontableInstance = class {
             }
             for(let r = 0; r < content.length; r++) {
                 for (let c = 0; c < content[r].length; c++) {
-                    contentObject[`c${c}`][r] = content[r][c];
+                    if(content[r][c] == null){
+                        contentObject[`c${c}`][r] = ''
+                    } else {
+                        contentObject[`c${c}`][r] = content[r][c];
+                    }
                 }
             }
         }
