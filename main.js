@@ -154,6 +154,8 @@ window.HandsontableInstance = class {
             cols: colsHeaders.every(h => h === false) ? [] : colsHeaders,
             rows: rowsHeaders.every(h => h === false) ? [] : rowsHeaders,
             value: contentObject
+        }, {
+            rArrayType: 'vector'
         });
     }
 
